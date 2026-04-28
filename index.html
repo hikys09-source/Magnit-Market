@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Магнит Маркет | Справочник сотрудника</title>
+    <title>Справочник сотрудника склада | Магнит Маркет</title>
     
     <!-- PWA / Web App -->
     <link rel="manifest" href="manifest.json">
@@ -28,219 +28,147 @@
             background: #f4f7fc;
             color: #1e2a3a;
             line-height: 1.5;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        /* Плавающая кнопка */
-        .fab {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: linear-gradient(135deg, #0b3b5f, #1b4f72);
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.2s;
-            z-index: 1000;
-            border: none;
-            color: white;
-        }
-        .fab i {
-            font-size: 28px;
-        }
-        .fab:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, #1b4f72, #0b3b5f);
-        }
-
-        /* Затемнение фона (модальное окно) */
-        .modal-overlay {
-            position: fixed;
+        /* ШАПКА – будет скрываться при прокрутке вниз */
+        .sticky-header {
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            z-index: 1100;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        /* Контейнер модального окна */
-        .modal-container {
-            background: #f4f7fc;
-            width: 90%;
-            max-width: 1300px;
-            height: 90%;
-            max-height: 90%;
-            border-radius: 32px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            position: relative;
-        }
-
-        /* Шапка модального окна */
-        .modal-header {
             background: linear-gradient(135deg, #0b3b5f, #1b4f72);
             color: white;
-            padding: 1rem 1.5rem;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 100;
+            transition: transform 0.3s ease;
+            transform: translateY(0);
+        }
+        /* Класс для скрытия шапки */
+        .sticky-header.hidden {
+            transform: translateY(-100%);
+        }
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-        .modal-header h2 {
-            font-size: 1.3rem;
+        .sticky-header h1 {
+            font-size: 1.4rem;
             display: flex;
             align-items: center;
             gap: 10px;
+            margin: 0;
         }
-        .close-modal {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: 0.2s;
+        .sticky-header p {
+            opacity: 0.9;
+            font-size: 0.85rem;
+            margin-top: 4px;
         }
-        .close-modal:hover {
-            background: rgba(255,255,255,0.4);
-        }
-
-        /* Тело модального окна (скролл) */
-        .modal-body {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem 1.5rem 1.5rem;
-        }
-
-        /* Поиск внутри модального окна */
-        .search-bar-modal {
+        .search-bar {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             background: white;
             border-radius: 48px;
             padding: 0.2rem 0.2rem 0.2rem 1rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            min-width: 240px;
         }
-        .search-bar-modal i {
+        .search-bar i {
             color: #1b4f72;
-            font-size: 1.2rem;
             align-self: center;
         }
-        .search-bar-modal input {
+        .search-bar input {
             flex: 1;
             border: none;
-            padding: 0.7rem 0;
-            font-size: 1rem;
+            padding: 0.6rem 0;
+            font-size: 0.9rem;
             outline: none;
             background: transparent;
         }
-        .search-bar-modal button {
+        .search-bar button {
             background: #ff8c42;
             border: none;
             border-radius: 40px;
-            padding: 0.5rem 1.2rem;
+            padding: 0.4rem 1rem;
             color: white;
             font-weight: bold;
             cursor: pointer;
         }
 
-        /* Контейнер с оглавлением и контентом */
-        .flex-layout {
+        /* Основной контент */
+        .container {
             display: flex;
-            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 1.5rem auto;
+            padding: 0 1.5rem;
+            gap: 2rem;
         }
-        .sidebar-modal {
+        .sidebar {
             flex: 1;
-            min-width: 220px;
+            min-width: 240px;
             background: white;
-            border-radius: 20px;
-            padding: 1rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
             height: fit-content;
             position: sticky;
-            top: 0;
+            top: 90px; /* отступ, чтобы не наезжало на шапку */
         }
-        .sidebar-modal h3 {
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
+        .sidebar h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
             border-left: 4px solid #ff8c42;
-            padding-left: 10px;
+            padding-left: 12px;
         }
-        .sidebar-modal ul {
+        .sidebar ul {
             list-style: none;
         }
-        .sidebar-modal li {
-            margin: 0.6rem 0;
+        .sidebar li {
+            margin: 0.7rem 0;
         }
-        .sidebar-modal a {
+        .sidebar a {
             text-decoration: none;
             color: #2c3e50;
             font-weight: 500;
-            font-size: 0.9rem;
             cursor: pointer;
-            display: inline-block;
             transition: 0.2s;
         }
-        .sidebar-modal a:hover {
+        .sidebar a:hover {
             color: #ff8c42;
             transform: translateX(4px);
         }
-        .content-modal {
+        .content {
             flex: 3;
             background: white;
-            border-radius: 20px;
-            padding: 1.2rem 1.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-radius: 24px;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
         .card {
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             border-bottom: 1px solid #e9ecef;
-            padding-bottom: 1.2rem;
-            scroll-margin-top: 80px;
+            padding-bottom: 1.5rem;
+            scroll-margin-top: 100px;
         }
         .card:last-child {
             border-bottom: none;
         }
         .card h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.8rem;
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
             color: #0b3b5f;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .card ul, .card ol {
-            margin-left: 1.5rem;
-            margin-bottom: 0.8rem;
+            margin-left: 1.8rem;
+            margin-bottom: 1rem;
         }
         .note {
             background: #fff8e7;
             border-left: 4px solid #ffb347;
-            padding: 0.6rem 1rem;
+            padding: 0.8rem 1rem;
             border-radius: 12px;
             margin: 0.8rem 0;
         }
@@ -252,192 +180,121 @@
             height: auto;
             border-radius: 12px;
             margin: 12px 0;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         footer {
             text-align: center;
-            font-size: 0.75rem;
+            margin: 2rem 0 1rem;
+            font-size: 0.8rem;
             color: #6c7a89;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid #ddd;
         }
-        @media (max-width: 700px) {
-            .flex-layout {
+
+        @media (max-width: 800px) {
+            .container {
                 flex-direction: column;
+                margin-top: 1rem;
             }
-            .sidebar-modal {
+            .sidebar {
                 position: static;
                 margin-bottom: 1rem;
             }
-            .modal-header h2 {
+            .sticky-header h1 {
                 font-size: 1.1rem;
             }
-            .fab {
-                width: 56px;
-                height: 56px;
-                bottom: 20px;
-                right: 20px;
+            .search-bar {
+                min-width: auto;
+                width: 100%;
             }
-            .fab i {
-                font-size: 24px;
+            .header-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .content {
+                padding: 1rem;
+            }
+            .card h2 {
+                font-size: 1.3rem;
             }
         }
     </style>
 </head>
 <body>
 
-<!-- Плавающая кнопка -->
-<button class="fab" id="openModalBtn">
-    <i class="fas fa-book-open"></i>
-</button>
-
-<!-- Модальное окно (справочник) -->
-<div class="modal-overlay" id="modalOverlay">
-    <div class="modal-container">
-        <div class="modal-header">
-            <h2><i class="fas fa-warehouse"></i> Справочник сотрудника склада</h2>
-            <button class="close-modal" id="closeModalBtn"><i class="fas fa-times"></i></button>
+<!-- Шапка, которая будет скрываться при скролле вниз -->
+<header class="sticky-header" id="stickyHeader">
+    <div class="header-content">
+        <div>
+            <h1><i class="fas fa-warehouse"></i> Справочник сотрудника склада</h1>
+            <p>Магнит Маркет — регламент размещения, хранения и безопасности товара</p>
         </div>
-        <div class="modal-body">
-            <div class="search-bar-modal">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInputModal" placeholder="Поиск по правилам (полка, сейф, одежда)...">
-                <button id="searchBtnModal">Найти</button>
-            </div>
-            <div class="flex-layout">
-                <div class="sidebar-modal">
-                    <h3><i class="fas fa-list-ul"></i> Содержание</h3>
-                    <ul id="tableOfContentsModal"></ul>
-                </div>
-                <div class="content-modal" id="contentModal"></div>
-            </div>
-            <footer>
-                <i class="fas fa-sync-alt"></i> Версия 1.0 · При ошибках сообщите старшему смены
-            </footer>
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Поиск по правилам (полка, сейф, одежда)...">
+            <button id="searchBtn">Найти</button>
         </div>
     </div>
+</header>
+
+<div class="container">
+    <div class="sidebar">
+        <h3><i class="fas fa-list-ul"></i> Содержание</h3>
+        <ul id="tableOfContents"></ul>
+    </div>
+    <div class="content" id="contentArea"></div>
 </div>
+<footer>
+    <i class="fas fa-sync-alt"></i> Версия 1.0 · При обнаружении ошибок сообщите старшему смены
+</footer>
 
 <script>
-    // --------------------------------------------------------------
-    // ДАННЫЕ СПРАВОЧНИКА (те же разделы, что и ранее)
-    // --------------------------------------------------------------
+    // ---------- ДАННЫЕ СПРАВОЧНИКА ----------
     const sections = [
-        {
-            id: "welcome",
-            title: "🏠 Введение",
-            content: `<p>Данный регламент описывает требования по размещению и хранению товара на складе Магнит Маркет, с целью увеличения скорости сборки и снижения рисков потери и повреждения товара.</p>
-                       <p>Товар должен быть расположен по ячейкам хранения так, чтобы в дальнейшем не пришлось изыскивать дополнительных площадей. Рабочее пространство не должно быть захламлено.</p>`
-        },
-        {
-            id: "rule-scan-zone",
-            title: "📱 1.1 Сканирование зоны работы",
-            content: `<p><strong>Для начала размещения необходимо:</strong></p>
-                       <ul><li>Зайти в программу «PickApp»</li><li>Отсканировать зону работы</li><li>Отсканировать штрихкод грузоместа или акта целиком</li></ul>`
-        },
-        {
-            id: "rule-scan-sku",
-            title: "📦 1.2 Сканирование SKU и ячейки",
-            content: `<p>После сканирования зоны:</p><ul><li>Отсканируйте штрихкод (SKU) товара</li><li>Укажите количество</li><li>Отсканируйте ячейку</li></ul><p>Вы можете посмотреть список товаров, которые разместили или осталось разместить.</p>`
-        },
-        {
-            id: "rule-check",
-            title: "🔍 1.3 Сверка ШК и пересчёт",
-            content: `<p>Перед размещением товар проходит процедуру пересчёта.<br>✅ <strong>Сверка ШК товара с Актом приема-передачи ОБЯЗАТЕЛЬНА.</strong></p>`
-        },
-        {
-            id: "rule-packing",
-            title: "🧱 1.4 Требования к упаковке",
-            content: `<ul><li>Сыпучие, острые, магнитные товары — в плотной упаковке</li><li>Жидкие — вертикально</li><li>Хрупкие — строго в индивидуальной упаковке</li><li>Тяжелые — в нижние ячейки, легкие — в верхние</li><li>ШК должен быть виден</li><li>Размещать согласно габаритам: мелко-, средне-, крупногабаритные ячейки</li></ul>`
-        },
-        {
-            id: "floors",
-            title: "🏢 2. Этажи склада",
-            content: `<ul><li><strong>1 этаж:</strong> сыпучие, жидкие, тяжёлые, нестандартные (по согласованию)</li><li><strong>2 этаж:</strong> крупногабарит (>13 701 см³)</li><li><strong>3 этаж:</strong> Сейф + ЭКО</li><li><strong>4–6 этажи:</strong> остальные категории</li></ul>`
-        },
-        {
-            id: "shelf-1",
-            title: "🟦 3.1 Первая полка",
-            content: `<p>Крупногабарит: 3420 – 13700 см³. Также обувь.<br>Допускается деление товара на несколько ячеек при личном пересчете.</p>`
-        },
-        {
-            id: "shelf-2",
-            title: "👕 3.2 Вторая полка",
-            content: `<p><strong>ТОЛЬКО Одежда и Обувь.</strong> Другой товар ЗАПРЕЩЁН!</p>`
-        },
-        {
-            id: "shelf-3",
-            title: "🟩 3.3 Третья полка",
-            content: `<p>Небольшие товары: 171 – 1000 см³, макс. сторона ≤40 см.<br>Если есть пластиковый короб — ТОЛЬКО мелкоштучный товар.</p>`
-        },
-        {
-            id: "shelf-4",
-            title: "🟨 3.4 Четвертая полка",
-            content: `<p>Мелкоштучный товар: 0 – 170 см³, макс. сторона ≤15 см. В пластиковые короба.</p>`
-        },
-        {
-            id: "shelf-5",
-            title: "🟧 3.5 Пятая полка",
-            content: `<p>Как третья полка: 171 – 1000 см³, макс. сторона ≤40 см.<br>Если есть короб — ТОЛЬКО мелкоштучный товар.</p>`
-        },
-        {
-            id: "shelf-6",
-            title: "🟥 3.6 Шестая полка",
-            content: `<p>Товары: 1001 – 3419 см³, вес ≤3 кг, макс. сторона ≤40 см.<br>Также: обувь, верхняя одежда.<br>⚖️ Тяжёлые — по краям, лёгкие — в центр. Общий вес ≤35 кг.</p>`
-        },
-        {
-            id: "forbidden",
-            title: "⛔ 4. Строго запрещено",
-            content: `<ul><li>2 одинаковых товара с разными ШК в одной ячейке</li><li>Товар в коробке (вынимать по возможности)</li><li>В пакетах, резинках, с накладной</li><li>Крупный сверху на мелкий</li><li>Вторым рядом</li><li>Поверх уже существующего</li><li>>35 кг на полку</li><li>Тяжёлый в центр</li><li>Без упаковки / повреждённая упаковка</li><li>Скользкие друг на друга</li></ul>`
-        },
-        {
-            id: "large-size",
-            title: "🖼️ 5. Крупногабаритный товар",
-            content: `<p>2 этаж: >13 701 см³ или сторона >40 см.<br>Также: Картины, Холсты, Автоковры, Телевизоры.<br>❗ Картины и холсты — строго вертикально, ШК к проходу. Если невозможно — обратиться к ст. специалисту.</p>`
-        },
-        {
-            id: "pallet",
-            title: "🚜 6. Поддонное размещение",
-            content: `<p>Допускается для больших партий или крупногабарита.</p><p><strong>Запрещено:</strong></p><ul><li>>1 поддона в ячейку</li><li>Складирование друг на друга</li><li>>4 наименований на поддон</li><li>Высота >160 см</li></ul>`
-        },
-        {
-            id: "safe",
-            title: "🔒 7. Сейфовое размещение",
-            content: `<p><strong>Только ответственные сотрудники с допуском Face ID.</strong></p><p>Категории товаров в сейф:</p><ul><li>Смартфоны, гаджеты от 500 руб.</li><li>Фото/видео техника от 500 руб.</li><li>Консоли, наушники от 1000 руб.</li><li>Оргтехника от 2000 руб.</li><li>Power Bank, флешки от 1000 руб.</li><li>Зажигалки (кроме кухонных пустых)</li><li>Часы, бижутерия от 500 руб.</li><li>Парфюм от 5000 руб.</li><li>Инструменты от 5000 руб.</li><li>Одежда от 1000–1500 руб. (ALGA — вся)</li><li>Обувь от 1500 руб. или в коробках</li><li>Фены от 15 000 руб.</li><li>Ножи (кроме канцелярских)</li><li>Пневматика, арбалеты, луки (до определенных мощностей)</li><li>Автоаксессуары от 1500 руб.</li><li>Сертификаты, сим-карты, монеты — НЕЗАВИСИМО от стоимости</li></ul>`
-        },
-        {
-            id: "dangerous",
-            title: "☣️ 8. Потенциально опасные товары",
-            content: `<div class="note">
-                        <i class="fas fa-skull-crossbones"></i> <strong>Опасные грузы:</strong> правила обращения выдаются руководителем смены.<br>
-                        <!-- ЗДЕСЬ УСТАНОВИТЕ СВОЮ КАРТИНКУ, например "images/danger.png" -->
-                        <img class="scheme" src="https://placehold.co/600x300/FFB6C1/DC143C?text=⚠️+ОПАСНЫЕ+ГРУЗЫ+⚠️" alt="Опасные товары">
-                        <p><small>Рисунок – символы опасности (образец). Актуальная схема у старшего смены.</small></p>
-                        <ul><li>Легковоспламеняющиеся жидкости</li><li>Едкие вещества</li><li>Газовые баллончики</li></ul>
-                        ⚠️ <strong>Запрещено размещение вместе с обычными товарами без спецмаркировки.</strong>
-                      </div>`
-        }
+        { id: "welcome", title: "🏠 Введение", content: `<p>Данный регламент описывает требования по размещению и хранению товара на складе Магнит Маркет, с целью увеличения скорости сборки и снижения рисков потери и повреждения товара.</p><p>Товар должен быть расположен по ячейкам хранения так, чтобы в дальнейшем не пришлось изыскивать дополнительных площадей. Рабочее пространство не должно быть захламлено.</p>` },
+        { id: "rule-scan-zone", title: "📱 1.1 Сканирование зоны работы", content: `<p><strong>Для начала размещения необходимо:</strong></p><ul><li>Зайти в программу «PickApp»</li><li>Отсканировать зону работы</li><li>Отсканировать штрихкод грузоместа или акта целиком</li></ul>` },
+        { id: "rule-scan-sku", title: "📦 1.2 Сканирование SKU и ячейки", content: `<p>После сканирования зоны:</p><ul><li>Отсканируйте штрихкод (SKU) товара</li><li>Укажите количество</li><li>Отсканируйте ячейку</li></ul><p>Вы можете посмотреть список товаров, которые разместили или осталось разместить.</p>` },
+        { id: "rule-check", title: "🔍 1.3 Сверка ШК и пересчёт", content: `<p>Перед размещением товар проходит процедуру пересчёта.<br>✅ <strong>Сверка ШК товара с Актом приема-передачи ОБЯЗАТЕЛЬНА.</strong></p>` },
+        { id: "rule-packing", title: "🧱 1.4 Требования к упаковке", content: `<ul><li>Сыпучие, острые, магнитные товары — в плотной упаковке</li><li>Жидкие — вертикально</li><li>Хрупкие — строго в индивидуальной упаковке</li><li>Тяжелые — в нижние ячейки, легкие — в верхние</li><li>ШК должен быть виден</li><li>Размещать согласно габаритам: мелко-, средне-, крупногабаритные ячейки</li></ul>` },
+        { id: "floors", title: "🏢 2. Этажи склада", content: `<ul><li><strong>1 этаж:</strong> сыпучие, жидкие, тяжёлые, нестандартные (по согласованию)</li><li><strong>2 этаж:</strong> крупногабарит (>13 701 см³)</li><li><strong>3 этаж:</strong> Сейф + ЭКО</li><li><strong>4–6 этажи:</strong> остальные категории</li></ul>` },
+        { id: "shelf-1", title: "🟦 3.1 Первая полка", content: `<p>Крупногабарит: 3420 – 13700 см³. Также обувь.<br>Допускается деление товара на несколько ячеек при личном пересчете.</p>` },
+        { id: "shelf-2", title: "👕 3.2 Вторая полка", content: `<p><strong>ТОЛЬКО Одежда и Обувь.</strong> Другой товар ЗАПРЕЩЁН!</p>` },
+        { id: "shelf-3", title: "🟩 3.3 Третья полка", content: `<p>Небольшие товары: 171 – 1000 см³, макс. сторона ≤40 см.<br>Если есть пластиковый короб — ТОЛЬКО мелкоштучный товар.</p>` },
+        { id: "shelf-4", title: "🟨 3.4 Четвертая полка", content: `<p>Мелкоштучный товар: 0 – 170 см³, макс. сторона ≤15 см. В пластиковые короба.</p>` },
+        { id: "shelf-5", title: "🟧 3.5 Пятая полка", content: `<p>Как третья полка: 171 – 1000 см³, макс. сторона ≤40 см.<br>Если есть короб — ТОЛЬКО мелкоштучный товар.</p>` },
+        { id: "shelf-6", title: "🟥 3.6 Шестая полка", content: `<p>Товары: 1001 – 3419 см³, вес ≤3 кг, макс. сторона ≤40 см.<br>Также: обувь, верхняя одежда.<br>⚖️ Тяжёлые — по краям, лёгкие — в центр. Общий вес ≤35 кг.</p>` },
+        { id: "forbidden", title: "⛔ 4. Строго запрещено", content: `<ul><li>2 одинаковых товара с разными ШК в одной ячейке</li><li>Товар в коробке (вынимать по возможности)</li><li>В пакетах, резинках, с накладной</li><li>Крупный сверху на мелкий</li><li>Вторым рядом</li><li>Поверх уже существующего</li><li>>35 кг на полку</li><li>Тяжёлый в центр</li><li>Без упаковки / повреждённая упаковка</li><li>Скользкие друг на друга</li></ul>` },
+        { id: "large-size", title: "🖼️ 5. Крупногабаритный товар", content: `<p>2 этаж: >13 701 см³ или сторона >40 см.<br>Также: Картины, Холсты, Автоковры, Телевизоры.<br>❗ Картины и холсты — строго вертикально, ШК к проходу. Если невозможно — обратиться к ст. специалисту.</p>` },
+        { id: "pallet", title: "🚜 6. Поддонное размещение", content: `<p>Допускается для больших партий или крупногабарита.</p><p><strong>Запрещено:</strong></p><ul><li>>1 поддона в ячейку</li><li>Складирование друг на друга</li><li>>4 наименований на поддон</li><li>Высота >160 см</li></ul>` },
+        { id: "safe", title: "🔒 7. Сейфовое размещение", content: `<p><strong>Только ответственные сотрудники с допуском Face ID.</strong></p><p>Категории товаров в сейф:</p><ul><li>Смартфоны, гаджеты от 500 руб.</li><li>Фото/видео техника от 500 руб.</li><li>Консоли, наушники от 1000 руб.</li><li>Оргтехника от 2000 руб.</li><li>Power Bank, флешки от 1000 руб.</li><li>Зажигалки (кроме кухонных пустых)</li><li>Часы, бижутерия от 500 руб.</li><li>Парфюм от 5000 руб.</li><li>Инструменты от 5000 руб.</li><li>Одежда от 1000–1500 руб. (ALGA — вся)</li><li>Обувь от 1500 руб. или в коробках</li><li>Фены от 15 000 руб.</li><li>Ножи (кроме канцелярских)</li><li>Пневматика, арбалеты, луки (до определенных мощностей)</li><li>Автоаксессуары от 1500 руб.</li><li>Сертификаты, сим-карты, монеты — НЕЗАВИСИМО от стоимости</li></ul>` },
+        { id: "dangerous", title: "☣️ 8. Потенциально опасные товары", content: `<div class="note"><i class="fas fa-skull-crossbones"></i> <strong>Опасные грузы:</strong> правила обращения с ними выдаются руководителем смены.<br><img class="scheme" src="https://placehold.co/600x300/FFB6C1/DC143C?text=⚠️+ОПАСНЫЕ+ГРУЗЫ+⚠️" alt="Пример маркировки опасных товаров"><p><small>Рисунок 1 – Символы опасности (образец). Актуальная схема – на стенде у старшего смены.</small></p><ul><li>Легковоспламеняющиеся жидкости (лаки, растворители)</li><li>Едкие вещества (кислоты, щёлочи)</li><li>Газовые баллончики (спреи, аэрозоли)</li></ul>⚠️ <strong>Запрещено размещение вместе с обычными товарами без спецмаркировки.</strong></div>` }
     ];
 
-    // DOM элементы
-    const modalOverlay = document.getElementById('modalOverlay');
-    const openBtn = document.getElementById('openModalBtn');
-    const closeBtn = document.getElementById('closeModalBtn');
-    const tocContainer = document.getElementById('tableOfContentsModal');
-    const contentContainer = document.getElementById('contentModal');
-    const searchInput = document.getElementById('searchInputModal');
-    const searchBtn = document.getElementById('searchBtnModal');
-
-    // Функции
+    // Вспомогательные функции
     function stripHtml(html) {
         let tmp = document.createElement('div');
         tmp.innerHTML = html;
         return tmp.textContent || tmp.innerText || '';
     }
 
+    function buildTOC() {
+        const tocList = document.getElementById('tableOfContents');
+        tocList.innerHTML = '';
+        sections.forEach(section => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = `#${section.id}`;
+            a.innerHTML = section.title;
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById(section.id).scrollIntoView({ behavior: 'smooth' });
+            });
+            li.appendChild(a);
+            tocList.appendChild(li);
+        });
+    }
+
     function renderContent() {
-        contentContainer.innerHTML = '';
+        const container = document.getElementById('contentArea');
+        container.innerHTML = '';
         sections.forEach(section => {
             const card = document.createElement('div');
             card.className = 'card';
@@ -450,26 +307,9 @@
             contentDiv.innerHTML = section.content;
             card.appendChild(titleEl);
             card.appendChild(contentDiv);
-            contentContainer.appendChild(card);
+            container.appendChild(card);
         });
         buildTOC();
-    }
-
-    function buildTOC() {
-        tocContainer.innerHTML = '';
-        sections.forEach(section => {
-            const li = document.createElement('li');
-            const a = document.createElement('a');
-            a.href = `#${section.id}`;
-            a.innerHTML = section.title;
-            a.addEventListener('click', (e) => {
-                e.preventDefault();
-                const target = document.getElementById(section.id);
-                if (target) target.scrollIntoView({ behavior: 'smooth' });
-            });
-            li.appendChild(a);
-            tocContainer.appendChild(li);
-        });
     }
 
     function removeHighlights(container) {
@@ -510,9 +350,9 @@
     }
 
     function performSearch() {
-        const query = searchInput.value.trim().toLowerCase();
-        const cards = document.querySelectorAll('#contentModal .card');
-        const noResultsMsg = document.getElementById('noResultsMsgModal');
+        const query = document.getElementById('searchInput').value.trim().toLowerCase();
+        const cards = document.querySelectorAll('.card');
+        const noResultsMsg = document.getElementById('noResultsMsg');
         if (noResultsMsg) noResultsMsg.remove();
 
         if (query === '') {
@@ -536,51 +376,44 @@
         });
 
         if (!foundAny) {
+            const container = document.getElementById('contentArea');
             const msg = document.createElement('div');
-            msg.id = 'noResultsMsgModal';
+            msg.id = 'noResultsMsg';
             msg.className = 'note';
             msg.style.textAlign = 'center';
             msg.innerHTML = '<i class="fas fa-search-minus"></i> Ничего не найдено. Попробуйте другие слова.';
-            contentContainer.appendChild(msg);
+            container.appendChild(msg);
         }
     }
 
-    // Открыть/закрыть модальное окно
-    function openModal() {
-        modalOverlay.classList.add('active');
-        // небольшая задержка для плавности
-        setTimeout(() => {
-            modalOverlay.style.opacity = '1';
-        }, 10);
-        // рендерим контент, если его еще нет
-        if (!contentContainer.hasChildNodes()) {
-            renderContent();
+    // ---------- Логика скрытия шапки при скролле ----------
+    let lastScrollY = window.scrollY;
+    const header = document.getElementById('stickyHeader');
+
+    window.addEventListener('scroll', () => {
+        const currentScrollY = window.scrollY;
+        if (currentScrollY > lastScrollY && currentScrollY > 80) {
+            // Скроллим вниз – скрываем шапку
+            header.classList.add('hidden');
+        } else {
+            // Скроллим вверх – показываем
+            header.classList.remove('hidden');
         }
-    }
-
-    function closeModal() {
-        modalOverlay.classList.remove('active');
-        modalOverlay.style.opacity = '0';
-        // очищаем подсветку поиска при закрытии?
-        searchInput.value = '';
-        performSearch(); // сбросит поиск
-    }
-
-    // Обработчики
-    openBtn.addEventListener('click', openModal);
-    closeBtn.addEventListener('click', closeModal);
-    modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) closeModal();
-    });
-    searchBtn.addEventListener('click', performSearch);
-    searchInput.addEventListener('keyup', (e) => {
-        if (e.key === 'Enter') performSearch();
+        lastScrollY = currentScrollY;
     });
 
-    // Инициализация при первом открытии
-    // (рендер будет вызван при openModal)
+    // При загрузке страницы
+    document.addEventListener('DOMContentLoaded', () => {
+        renderContent();
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') performSearch();
+        });
+    });
 
-    // Регистрация Service Worker (если нужен офлайн)
+    // Регистрация Service Worker (офлайн)
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js')
             .then(reg => console.log('SW registered:', reg))
