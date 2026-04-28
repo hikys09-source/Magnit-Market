@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Справочник сотрудника склада | Магнит Маркет</title>
+    <!-- Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f4f7fc;
+            color: #1e2a3a;
+            line-height: 1.5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0b3b5f, #1b4f72);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header p {
+            opacity: 0.9;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+        .search-bar {
+            margin-top: 1rem;
+            display: flex;
+            gap: 10px;
+            background: white;
+            border-radius: 48px;
+            padding: 0.2rem 0.2rem 0.2rem 1rem;
+            max-width: 500px;
+        }
+        .search-bar i {
+            color: #1b4f72;
+            font-size: 1.2rem;
+            align-self: center;
+        }
+        .search-bar input {
+            flex: 1;
+            border: none;
+            padding: 0.7rem 0;
+            font-size: 1rem;
+            outline: none;
+            background: transparent;
+        }
+        .search-bar button {
+            background: #ff8c42;
+            border: none;
+            border-radius: 40px;
+            padding: 0.5rem 1.2rem;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .search-bar button:hover {
+            background: #e67e22;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            flex: 1;
+            min-width: 240px;
+            background: white;
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            height: fit-content;
+            position: sticky;
+            top: 110px;
+        }
+        .sidebar h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            border-left: 4px solid #ff8c42;
+            padding-left: 12px;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar li {
+            margin: 0.7rem 0;
+        }
+        .sidebar a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            transition: 0.2s;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+        .sidebar a:hover {
+            color: #ff8c42;
+            transform: translateX(4px);
+        }
+
+        .content {
+            flex: 3;
+            background: white;
+            border-radius: 24px;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+        .card {
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 1.5rem;
+            scroll-margin-top: 100px;
+        }
+        .card:last-child {
+            border-bottom: none;
+        }
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: #0b3b5f;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card h3 {
+            font-size: 1.3rem;
+            margin: 1rem 0 0.8rem 0;
+            color: #1f6392;
+            padding-left: 8px;
+            border-left: 4px solid #ff8c42;
+        }
+        .card p, .card li {
+            margin-bottom: 0.5rem;
+            color: #2d3e50;
+        }
+        .card ul, .card ol {
+            margin-left: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        .note {
+            background: #fff8e7;
+            border-left: 4px solid #ffb347;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            margin: 0.8rem 0;
+        }
+        .highlight {
+            background-color: #fff1b5;
+        }
+        img.scheme {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin: 12px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e0e7ed;
+        }
+        footer {
+            text-align: center;
+            margin: 2rem 0 1rem;
+            font-size: 0.8rem;
+            color: #6c7a89;
+        }
+        @media (max-width: 800px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                position: static;
+                margin-bottom: 1rem;
+            }
+            .content {
+                padding: 1.2rem;
+            }
+            .card h2 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1><i class="fas fa-warehouse"></i> Справочник сотрудника склада</h1>
+    <p>Магнит Маркет — регламент размещения, хранения и безопасности товара</p>
+    <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Поиск по правилам (например, «полка», «сейф», «одежда»)..." autocomplete="off">
+        <button id="searchBtn">Найти</button>
+    </div>
+</div>
+
+<div class="container">
+    <div class="sidebar">
+        <h3><i class="fas fa-list-ul"></i> Содержание</h3>
+        <ul id="tableOfContents"></ul>
+    </div>
+    <div class="content" id="contentArea"></div>
+</div>
+<footer>
+    <i class="fas fa-sync-alt"></i> Версия 1.0 · При обнаружении ошибок сообщите старшему смены
+</footer>
+
+<script>
+    // --------------------------------------------------------------
+    // 1. ДАННЫЕ СПРАВОЧНИКА (все разделы + в 8-й добавлено изображение)
+    // --------------------------------------------------------------
+    const sections = [
+        {
+            id: "welcome",
+            title: "🏠 Введение",
+            content: `<p>Данный регламент описывает требования по размещению и хранению товара на складе Магнит Маркет, с целью увеличения скорости сборки и снижения рисков потери и повреждения товара.</p>
+                       <p>Товар должен быть расположен по ячейкам хранения так, чтобы в дальнейшем не пришлось изыскивать дополнительных площадей. Рабочее пространство не должно быть захламлено.</p>`
+        },
+        {
+            id: "rule-scan-zone",
+            title: "📱 1.1 Сканирование зоны работы",
+            content: `<p><strong>Для начала размещения необходимо:</strong></p>
+                       <ul>
+                           <li>Зайти в программу «PickApp»</li>
+                           <li>Отсканировать зону работы</li>
+                           <li>Отсканировать штрихкод грузоместа или акта целиком</li>
+                       </ul>`
+        },
+        {
+            id: "rule-scan-sku",
+            title: "📦 1.2 Сканирование SKU и ячейки",
+            content: `<p>После сканирования зоны:</p>
+                       <ul>
+                           <li>Отсканируйте штрихкод (SKU) товара</li>
+                           <li>Укажите количество</li>
+                           <li>Отсканируйте ячейку</li>
+                       </ul>
+                       <p>Вы можете посмотреть список товаров, которые разместили или осталось разместить.</p>`
+        },
+        {
+            id: "rule-check",
+            title: "🔍 1.3 Сверка ШК и пересчёт",
+            content: `<p>Перед размещением товар проходит процедуру пересчёта.<br>
+                       ✅ <strong>Сверка ШК товара с Актом приема-передачи ОБЯЗАТЕЛЬНА.</strong></p>`
+        },
+        {
+            id: "rule-packing",
+            title: "🧱 1.4 Требования к упаковке",
+            content: `<ul>
+                       <li>Сыпучие, острые, магнитные товары — в плотной упаковке</li>
+                       <li>Жидкие — вертикально</li>
+                       <li>Хрупкие — строго в индивидуальной упаковке</li>
+                       <li>Тяжелые — в нижние ячейки, легкие — в верхние</li>
+                       <li>ШК должен быть виден</li>
+                       <li>Размещать согласно габаритам: мелко-, средне-, крупногабаритные ячейки</li>
+                       </ul>`
+        },
+        {
+            id: "floors",
+            title: "🏢 2. Этажи склада",
+            content: `<ul>
+                       <li><strong>1 этаж:</strong> сыпучие, жидкие, тяжёлые, нестандартные (по согласованию)</li>
+                       <li><strong>2 этаж:</strong> крупногабарит (>13 701 см³)</li>
+                       <li><strong>3 этаж:</strong> Сейф + ЭКО</li>
+                       <li><strong>4–6 этажи:</strong> остальные категории</li>
+                       </ul>`
+        },
+        {
+            id: "shelf-1",
+            title: "🟦 3.1 Первая полка",
+            content: `<p>Крупногабарит: 3420 – 13700 см³. Также обувь.<br>Допускается деление товара на несколько ячеек при личном пересчете.</p>`
+        },
+        {
+            id: "shelf-2",
+            title: "👕 3.2 Вторая полка",
+            content: `<p><strong>ТОЛЬКО Одежда и Обувь.</strong> Другой товар ЗАПРЕЩЁН!</p>`
+        },
+        {
+            id: "shelf-3",
+            title: "🟩 3.3 Третья полка",
+            content: `<p>Небольшие товары: 171 – 1000 см³, макс. сторона ≤40 см.<br>Если есть пластиковый короб — ТОЛЬКО мелкоштучный товар.</p>`
+        },
+        {
+            id: "shelf-4",
+            title: "🟨 3.4 Четвертая полка",
+            content: `<p>Мелкоштучный товар: 0 – 170 см³, макс. сторона ≤15 см. В пластиковые короба.</p>`
+        },
+        {
+            id: "shelf-5",
+            title: "🟧 3.5 Пятая полка",
+            content: `<p>Как третья полка: 171 – 1000 см³, макс. сторона ≤40 см.<br>Если есть короб — ТОЛЬКО мелкоштучный товар.</p>`
+        },
+        {
+            id: "shelf-6",
+            title: "🟥 3.6 Шестая полка",
+            content: `<p>Товары: 1001 – 3419 см³, вес ≤3 кг, макс. сторона ≤40 см.<br>Также: обувь, верхняя одежда.<br>⚖️ Тяжёлые — по краям, лёгкие — в центр. Общий вес ≤35 кг.</p>`
+        },
+        {
+            id: "forbidden",
+            title: "⛔ 4. Строго запрещено",
+            content: `<ul>
+                       <li>2 одинаковых товара с разными ШК в одной ячейке</li>
+                       <li>Товар в коробке (вынимать по возможности)</li>
+                       <li>В пакетах, резинках, с накладной</li>
+                       <li>Крупный сверху на мелкий</li>
+                       <li>Вторым рядом</li>
+                       <li>Поверх уже существующего</li>
+                       <li>>35 кг на полку</li>
+                       <li>Тяжёлый в центр</li>
+                       <li>Без упаковки / повреждённая упаковка</li>
+                       <li>Скользкие друг на друга</li>
+                       </ul>`
+        },
+        {
+            id: "large-size",
+            title: "🖼️ 5. Крупногабаритный товар",
+            content: `<p>2 этаж: >13 701 см³ или сторона >40 см.<br>Также: Картины, Холсты, Автоковры, Телевизоры.<br>❗ Картины и холсты — строго вертикально, ШК к проходу. Если невозможно — обратиться к ст. специалисту.</p>`
+        },
+        {
+            id: "pallet",
+            title: "🚜 6. Поддонное размещение",
+            content: `<p>Допускается для больших партий или крупногабарита.</p>
+                       <p><strong>Запрещено:</strong></p>
+                       <ul>
+                           <li>>1 поддона в ячейку</li>
+                           <li>Складирование друг на друга</li>
+                           <li>>4 наименований на поддон</li>
+                           <li>Высота >160 см</li>
+                       </ul>`
+        },
+        {
+            id: "safe",
+            title: "🔒 7. Сейфовое размещение",
+            content: `<p><strong>Только ответственные сотрудники с допуском Face ID.</strong></p>
+                       <p>Категории товаров в сейф:</p>
+                       <ul>
+                           <li>Смартфоны, гаджеты от 500 руб.</li>
+                           <li>Фото/видео техника от 500 руб.</li>
+                           <li>Консоли, наушники от 1000 руб.</li>
+                           <li>Оргтехника от 2000 руб.</li>
+                           <li>Power Bank, флешки от 1000 руб.</li>
+                           <li>Зажигалки (кроме кухонных пустых)</li>
+                           <li>Часы, бижутерия от 500 руб.</li>
+                           <li>Парфюм от 5000 руб.</li>
+                           <li>Инструменты от 5000 руб.</li>
+                           <li>Одежда от 1000–1500 руб. (ALGA — вся)</li>
+                           <li>Обувь от 1500 руб. или в коробках</li>
+                           <li>Фены от 15 000 руб.</li>
+                           <li>Ножи (кроме канцелярских)</li>
+                           <li>Пневматика, арбалеты, луки (до определенных мощностей)</li>
+                           <li>Автоаксессуары от 1500 руб.</li>
+                           <li>Сертификаты, сим-карты, монеты — НЕЗАВИСИМО от стоимости</li>
+                       </ul>`
+        },
+        {
+            id: "dangerous",
+            title: "☣️ 8. Потенциально опасные товары",
+            // ВАЖНО: Здесь вставлено изображение (внешний плейсхолдер, замените на свой файл)
+            content: `<div class="note">
+                        <i class="fas fa-skull-crossbones"></i> <strong>Опасные грузы:</strong> правила обращения с ними выдаются руководителем смены.<br>
+                        <!-- Пример изображения (безопасная заглушка "опасные товары") 
+                             Замените src на путь к вашей картинке: например, "images/hazard.jpg" или "https://ваш-сайт/opasno.png" -->
+                        <img class="scheme" src="image.png" alt="Пример маркировки опасных товаров">
+                        <p><small>Рисунок 1 – Символы опасности (образец). Актуальная схема – на стенде у старшего смены.</small></p>
+                        <ul style="margin-top: 10px;">
+                            <li>Легковоспламеняющиеся жидкости (лаки, растворители)</li>
+                            <li>Едкие вещества (кислоты, щёлочи)</li>
+                            <li>Газовые баллончики (спреи, аэрозоли)</li>
+                        </ul>
+                        ⚠️ <strong>Запрещено размещение вместе с обычными товарами без спецмаркировки.</strong>
+                      </div>`
+        }
+    ];
+
+    // --------------------------------------------------------------
+    // 2. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ (рендер, поиск, оглавление)
+    // --------------------------------------------------------------
+    function stripHtml(html) {
+        let tmp = document.createElement('div');
+        tmp.innerHTML = html;
+        return tmp.textContent || tmp.innerText || '';
+    }
+
+    function buildTOC() {
+        const tocList = document.getElementById('tableOfContents');
+        tocList.innerHTML = '';
+        sections.forEach(section => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = `#${section.id}`;
+            a.innerHTML = section.title;
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById(section.id).scrollIntoView({ behavior: 'smooth' });
+            });
+            li.appendChild(a);
+            tocList.appendChild(li);
+        });
+    }
+
+    function renderContent() {
+        const container = document.getElementById('contentArea');
+        container.innerHTML = '';
+        sections.forEach(section => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.id = section.id;
+            // Сохраняем текст для поиска
+            const fullText = section.title + ' ' + stripHtml(section.content);
+            card.setAttribute('data-fulltext', fullText.toLowerCase());
+            const titleEl = document.createElement('h2');
+            titleEl.innerHTML = section.title;
+            const contentDiv = document.createElement('div');
+            contentDiv.innerHTML = section.content;
+            card.appendChild(titleEl);
+            card.appendChild(contentDiv);
+            container.appendChild(card);
+        });
+        buildTOC();
+    }
+
+    function removeHighlights(container) {
+        const marks = container.querySelectorAll('.highlight');
+        marks.forEach(mark => {
+            const parent = mark.parentNode;
+            parent.replaceChild(document.createTextNode(mark.textContent), mark);
+            parent.normalize();
+        });
+    }
+
+    function escapeRegex(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function highlightText(card, query) {
+        removeHighlights(card);
+        const walker = document.createTreeWalker(card, NodeFilter.SHOW_TEXT, {
+            acceptNode: function(node) {
+                if (node.parentElement && (node.parentElement.tagName === 'SCRIPT' || node.parentElement.tagName === 'STYLE' || node.parentElement.tagName === 'MARK')) {
+                    return NodeFilter.FILTER_REJECT;
+                }
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        });
+        const nodesToReplace = [];
+        while (walker.nextNode()) {
+            const node = walker.currentNode;
+            if (node.textContent && node.textContent.toLowerCase().includes(query)) {
+                nodesToReplace.push(node);
+            }
+        }
+        nodesToReplace.forEach(node => {
+            const span = document.createElement('span');
+            span.innerHTML = node.textContent.replace(new RegExp(`(${escapeRegex(query)})`, 'gi'), '<mark class="highlight">$1</mark>');
+            node.parentNode.replaceChild(span, node);
+        });
+    }
+
+    function performSearch() {
+        const query = document.getElementById('searchInput').value.trim().toLowerCase();
+        const cards = document.querySelectorAll('.card');
+        const noResultsMsg = document.getElementById('noResultsMsg');
+        if (noResultsMsg) noResultsMsg.remove();
+
+        if (query === '') {
+            cards.forEach(card => {
+                card.style.display = 'block';
+                removeHighlights(card);
+            });
+            return;
+        }
+
+        let foundAny = false;
+        cards.forEach(card => {
+            const fullText = card.getAttribute('data-fulltext') || '';
+            if (fullText.includes(query)) {
+                card.style.display = 'block';
+                highlightText(card, query);
+                foundAny = true;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        if (!foundAny) {
+            const container = document.getElementById('contentArea');
+            const msg = document.createElement('div');
+            msg.id = 'noResultsMsg';
+            msg.className = 'note';
+            msg.style.textAlign = 'center';
+            msg.innerHTML = '<i class="fas fa-search-minus"></i> Ничего не найдено. Попробуйте другие слова (например, «полка», «запрещено», «сейф»).';
+            container.appendChild(msg);
+        }
+    }
+
+    // --------------------------------------------------------------
+    // 3. ЗАПУСК ПРИ ЗАГРУЗКЕ СТРАНИЦЫ
+    // --------------------------------------------------------------
+    document.addEventListener('DOMContentLoaded', () => {
+        renderContent();
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') performSearch();
+        });
+    });
+</script>
+</body>
+</html>
