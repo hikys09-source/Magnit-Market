@@ -28,9 +28,10 @@
             background: #f4f7fc;
             color: #1e2a3a;
             line-height: 1.5;
+            padding-bottom: 70px; /* место для нижнего меню */
         }
 
-        /* ШАПКА – будет скрываться при прокрутке вниз */
+        /* ШАПКА – скрывается при прокрутке вниз */
         .sticky-header {
             position: sticky;
             top: 0;
@@ -42,7 +43,6 @@
             transition: transform 0.3s ease;
             transform: translateY(0);
         }
-        /* Класс для скрытия шапки */
         .sticky-header.hidden {
             transform: translateY(-100%);
         }
@@ -112,7 +112,7 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.05);
             height: fit-content;
             position: sticky;
-            top: 90px; /* отступ, чтобы не наезжало на шапку */
+            top: 90px;
         }
         .sidebar h3 {
             margin-bottom: 1rem;
@@ -148,7 +148,7 @@
             margin-bottom: 2.5rem;
             border-bottom: 1px solid #e9ecef;
             padding-bottom: 1.5rem;
-            scroll-margin-top: 100px;
+            scroll-margin-top: 80px; /* чтобы не перекрывалось шапкой */
         }
         .card:last-child {
             border-bottom: none;
@@ -184,9 +184,55 @@
         }
         footer {
             text-align: center;
-            margin: 2rem 0 1rem;
+            margin: 2rem 0 0;
             font-size: 0.8rem;
             color: #6c7a89;
+        }
+
+        /* НИЖНЕЕ МЕНЮ (фиксированное) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 16px;
+            border-top: 1px solid #e0e7ed;
+            z-index: 200;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 32px;
+            transition: 0.2s;
+            font-size: 0.75rem;
+            color: #5a6e7a;
+            font-weight: 500;
+        }
+        .nav-item i {
+            font-size: 1.4rem;
+            color: #1b4f72;
+        }
+        .nav-item span {
+            font-size: 0.7rem;
+        }
+        .nav-item:hover {
+            background: #eef2f8;
+        }
+        .nav-item:active {
+            transform: scale(0.96);
         }
 
         @media (max-width: 800px) {
@@ -215,12 +261,21 @@
             .card h2 {
                 font-size: 1.3rem;
             }
+            .bottom-nav {
+                padding: 6px 12px;
+            }
+            .nav-item i {
+                font-size: 1.2rem;
+            }
+            .nav-item span {
+                font-size: 0.65rem;
+            }
         }
     </style>
 </head>
 <body>
 
-<!-- Шапка, которая будет скрываться при скролле вниз -->
+<!-- Шапка, которая скрывается при скролле -->
 <header class="sticky-header" id="stickyHeader">
     <div class="header-content">
         <div>
@@ -246,8 +301,24 @@
     <i class="fas fa-sync-alt"></i> Версия 1.0 · При обнаружении ошибок сообщите старшему смены
 </footer>
 
+<!-- Нижнее меню навигации -->
+<div class="bottom-nav">
+    <button class="nav-item" data-target="welcome">
+        <i class="fas fa-book-open"></i>
+        <span>Регламенты</span>
+    </button>
+    <button class="nav-item" data-target="forbidden">
+        <i class="fas fa-stop-circle"></i>
+        <span>Стоп-зоны</span>
+    </button>
+    <button class="nav-item" data-target="pallet">
+        <i class="fas fa-pallet"></i>
+        <span>Поддонки</span>
+    </button>
+</div>
+
 <script>
-    // ---------- ДАННЫЕ СПРАВОЧНИКА ----------
+    // ---------- ДАННЫЕ СПРАВОЧНИКА (все разделы) ----------
     const sections = [
         { id: "welcome", title: "🏠 Введение", content: `<p>Данный регламент описывает требования по размещению и хранению товара на складе Магнит Маркет, с целью увеличения скорости сборки и снижения рисков потери и повреждения товара.</p><p>Товар должен быть расположен по ячейкам хранения так, чтобы в дальнейшем не пришлось изыскивать дополнительных площадей. Рабочее пространство не должно быть захламлено.</p>` },
         { id: "rule-scan-zone", title: "📱 1.1 Сканирование зоны работы", content: `<p><strong>Для начала размещения необходимо:</strong></p><ul><li>Зайти в программу «PickApp»</li><li>Отсканировать зону работы</li><li>Отсканировать штрихкод грузоместа или акта целиком</li></ul>` },
@@ -265,7 +336,7 @@
         { id: "large-size", title: "🖼️ 5. Крупногабаритный товар", content: `<p>2 этаж: >13 701 см³ или сторона >40 см.<br>Также: Картины, Холсты, Автоковры, Телевизоры.<br>❗ Картины и холсты — строго вертикально, ШК к проходу. Если невозможно — обратиться к ст. специалисту.</p>` },
         { id: "pallet", title: "🚜 6. Поддонное размещение", content: `<p>Допускается для больших партий или крупногабарита.</p><p><strong>Запрещено:</strong></p><ul><li>>1 поддона в ячейку</li><li>Складирование друг на друга</li><li>>4 наименований на поддон</li><li>Высота >160 см</li></ul>` },
         { id: "safe", title: "🔒 7. Сейфовое размещение", content: `<p><strong>Только ответственные сотрудники с допуском Face ID.</strong></p><p>Категории товаров в сейф:</p><ul><li>Смартфоны, гаджеты от 500 руб.</li><li>Фото/видео техника от 500 руб.</li><li>Консоли, наушники от 1000 руб.</li><li>Оргтехника от 2000 руб.</li><li>Power Bank, флешки от 1000 руб.</li><li>Зажигалки (кроме кухонных пустых)</li><li>Часы, бижутерия от 500 руб.</li><li>Парфюм от 5000 руб.</li><li>Инструменты от 5000 руб.</li><li>Одежда от 1000–1500 руб. (ALGA — вся)</li><li>Обувь от 1500 руб. или в коробках</li><li>Фены от 15 000 руб.</li><li>Ножи (кроме канцелярских)</li><li>Пневматика, арбалеты, луки (до определенных мощностей)</li><li>Автоаксессуары от 1500 руб.</li><li>Сертификаты, сим-карты, монеты — НЕЗАВИСИМО от стоимости</li></ul>` },
-        { id: "dangerous", title: "☣️ 8. Потенциально опасные товары", content: `<div class="note"><i class="fas fa-skull-crossbones"></i> <strong>Опасные грузы:</strong> правила обращения с ними выдаются руководителем смены.<br><img class="scheme" src="image.png"><p><small>Рисунок 1 – Символы опасности (образец). Актуальная схема – на стенде у старшего смены.</small></p><ul><li>Легковоспламеняющиеся жидкости (лаки, растворители)</li><li>Едкие вещества (кислоты, щёлочи)</li><li>Газовые баллончики (спреи, аэрозоли)</li></ul>⚠️ <strong>Запрещено размещение вместе с обычными товарами без спецмаркировки.</strong></div>` }
+        { id: "dangerous", title: "☣️ 8. Потенциально опасные товары", content: `<div class="note"><i class="fas fa-skull-crossbones"></i> <strong>Опасные грузы:</strong> правила обращения с ними выдаются руководителем смены.<br><img class="scheme" src="https://placehold.co/600x300/FFB6C1/DC143C?text=⚠️+ОПАСНЫЕ+ГРУЗЫ+⚠️" alt="Пример маркировки опасных товаров"><p><small>Рисунок 1 – Символы опасности (образец). Актуальная схема – на стенде у старшего смены.</small></p><ul><li>Легковоспламеняющиеся жидкости (лаки, растворители)</li><li>Едкие вещества (кислоты, щёлочи)</li><li>Газовые баллончики (спреи, аэрозоли)</li></ul>⚠️ <strong>Запрещено размещение вместе с обычными товарами без спецмаркировки.</strong></div>` }
     ];
 
     // Вспомогательные функции
@@ -386,23 +457,29 @@
         }
     }
 
-    // ---------- Логика скрытия шапки при скролле ----------
+    // Прокрутка к разделу при клике на нижнее меню
+    function scrollToSection(sectionId) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    // Скрытие шапки при скролле
     let lastScrollY = window.scrollY;
     const header = document.getElementById('stickyHeader');
 
     window.addEventListener('scroll', () => {
         const currentScrollY = window.scrollY;
         if (currentScrollY > lastScrollY && currentScrollY > 80) {
-            // Скроллим вниз – скрываем шапку
             header.classList.add('hidden');
         } else {
-            // Скроллим вверх – показываем
             header.classList.remove('hidden');
         }
         lastScrollY = currentScrollY;
     });
 
-    // При загрузке страницы
+    // Инициализация
     document.addEventListener('DOMContentLoaded', () => {
         renderContent();
         const searchInput = document.getElementById('searchInput');
@@ -411,9 +488,17 @@
         searchInput.addEventListener('keyup', (e) => {
             if (e.key === 'Enter') performSearch();
         });
+
+        // Назначить обработчики для нижнего меню
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const targetId = btn.getAttribute('data-target');
+                if (targetId) scrollToSection(targetId);
+            });
+        });
     });
 
-    // Регистрация Service Worker (офлайн)
+    // Service Worker (офлайн)
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js')
             .then(reg => console.log('SW registered:', reg))
