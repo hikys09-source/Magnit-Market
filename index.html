@@ -28,10 +28,10 @@
             background: #f4f7fc;
             color: #1e2a3a;
             line-height: 1.5;
-            padding-bottom: 70px; /* место для нижнего меню */
+            padding-bottom: 70px;
         }
 
-        /* ШАПКА – скрывается при прокрутке вниз */
+        /* ШАПКА – скрывается при прокрутке */
         .sticky-header {
             position: sticky;
             top: 0;
@@ -148,7 +148,7 @@
             margin-bottom: 2.5rem;
             border-bottom: 1px solid #e9ecef;
             padding-bottom: 1.5rem;
-            scroll-margin-top: 80px; /* чтобы не перекрывалось шапкой */
+            scroll-margin-top: 80px;
         }
         .card:last-child {
             border-bottom: none;
@@ -189,7 +189,78 @@
             color: #6c7a89;
         }
 
-        /* НИЖНЕЕ МЕНЮ (фиксированное) */
+        /* Блок НОВОВВЕДЕНИЯ (стили) */
+        .novelties-block {
+            margin-bottom: 2rem;
+            padding: 1rem 1.2rem;
+            border: 2px solid #1976D2;
+            border-radius: 20px;
+            background: #f5f9ff;
+        }
+        .novelties-block h3 {
+            color: #0d47a1;
+            margin-top: 0;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .novelties-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .novelties-table th {
+            background: #1976D2;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .novelties-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+        .novelties-table tr:hover {
+            background: #e3f2fd;
+        }
+        .novelty-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-актуально {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+        .status-новое {
+            background: #bbdefb;
+            color: #0d47a1;
+        }
+        .novelties-update-time {
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+            text-align: right;
+        }
+        .novelties-loading, .novelties-error, .novelties-empty {
+            text-align: center;
+            padding: 15px;
+        }
+        .novelties-error {
+            color: #d32f2f;
+            background: #ffebee;
+            border-radius: 8px;
+        }
+        .novelties-empty {
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Нижнее меню */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -230,9 +301,6 @@
         }
         .nav-item:hover {
             background: #eef2f8;
-        }
-        .nav-item:active {
-            transform: scale(0.96);
         }
 
         @media (max-width: 800px) {
@@ -275,7 +343,7 @@
 </head>
 <body>
 
-<!-- Шапка, которая скрывается при скролле -->
+<!-- Шапка -->
 <header class="sticky-header" id="stickyHeader">
     <div class="header-content">
         <div>
@@ -301,7 +369,7 @@
     <i class="fas fa-sync-alt"></i> Версия 1.0 · При обнаружении ошибок сообщите старшему смены
 </footer>
 
-<!-- Нижнее меню навигации -->
+<!-- Нижнее меню -->
 <div class="bottom-nav">
     <button class="nav-item" data-target="welcome">
         <i class="fas fa-book-open"></i>
@@ -313,12 +381,12 @@
     </button>
     <button class="nav-item" data-target="pallet">
         <i class="fas fa-pallet"></i>
-        <span>Нововведение</span>
+        <span>Поддонки</span>
     </button>
 </div>
 
 <script>
-    // ---------- ДАННЫЕ СПРАВОЧНИКА (все разделы) ----------
+    // ---------- ДАННЫЕ СПРАВОЧНИКА (основные разделы) ----------
     const sections = [
         { id: "welcome", title: "🏠 Введение", content: `<p>Данный регламент описывает требования по размещению и хранению товара на складе Магнит Маркет, с целью увеличения скорости сборки и снижения рисков потери и повреждения товара.</p><p>Товар должен быть расположен по ячейкам хранения так, чтобы в дальнейшем не пришлось изыскивать дополнительных площадей. Рабочее пространство не должно быть захламлено.</p>` },
         { id: "rule-scan-zone", title: "📱 1.1 Сканирование зоны работы", content: `<p><strong>Для начала размещения необходимо:</strong></p><ul><li>Зайти в программу «PickApp»</li><li>Отсканировать зону работы</li><li>Отсканировать штрихкод грузоместа или акта целиком</li></ul>` },
@@ -339,7 +407,7 @@
         { id: "dangerous", title: "☣️ 8. Потенциально опасные товары", content: `<div class="note"><i class="fas fa-skull-crossbones"></i> <strong>Опасные грузы:</strong> правила обращения с ними выдаются руководителем смены.<br><img class="scheme" src="https://placehold.co/600x300/FFB6C1/DC143C?text=⚠️+ОПАСНЫЕ+ГРУЗЫ+⚠️" alt="Пример маркировки опасных товаров"><p><small>Рисунок 1 – Символы опасности (образец). Актуальная схема – на стенде у старшего смены.</small></p><ul><li>Легковоспламеняющиеся жидкости (лаки, растворители)</li><li>Едкие вещества (кислоты, щёлочи)</li><li>Газовые баллончики (спреи, аэрозоли)</li></ul>⚠️ <strong>Запрещено размещение вместе с обычными товарами без спецмаркировки.</strong></div>` }
     ];
 
-    // Вспомогательные функции
+    // ---------- ФУНКЦИИ ОСНОВНОГО СПРАВОЧНИКА ----------
     function stripHtml(html) {
         let tmp = document.createElement('div');
         tmp.innerHTML = html;
@@ -366,6 +434,23 @@
     function renderContent() {
         const container = document.getElementById('contentArea');
         container.innerHTML = '';
+        
+        // Добавляем блок нововведений ПЕРВЫМ (после приветствия, но перед остальными карточками)
+        const noveltiesBlock = document.createElement('div');
+        noveltiesBlock.id = 'novelties-placeholder';
+        noveltiesBlock.innerHTML = `
+            <div class="novelties-block">
+                <h3><i class="fas fa-newspaper"></i> 🆕 Нововведения</h3>
+                <p><em>Актуальные изменения и нововведения для сотрудников. Обновляется автоматически.</em></p>
+                <div id="novelties-content">
+                    <div class="novelties-loading">⏳ Загрузка нововведений...</div>
+                </div>
+                <div id="novelties-update-time" class="novelties-update-time"></div>
+            </div>
+        `;
+        container.appendChild(noveltiesBlock);
+        
+        // Добавляем все основные разделы
         sections.forEach(section => {
             const card = document.createElement('div');
             card.className = 'card';
@@ -383,6 +468,87 @@
         buildTOC();
     }
 
+    // ---------- ЗАГРУЗКА НОВОВВЕДЕНИЙ ИЗ GOOGLE TABLES ----------
+    const NOVELTIES_TSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRBGkZqupNTmfs7D26nGRV6P0OOLQKHU2iBBhqo2gGChk1jwU88NE3hgeNJyfXwjKTMd8I2vcUg2XmF/pub?gid=0&single=true&output=tsv';
+    let updateInterval = null;
+
+    async function loadNovelties() {
+        const contentDiv = document.getElementById('novelties-content');
+        const timeSpan = document.getElementById('novelties-update-time');
+        if (!contentDiv) return;
+        
+        contentDiv.innerHTML = '<div class="novelties-loading">⏳ Загрузка нововведений...</div>';
+        
+        try {
+            const response = await fetch(NOVELTIES_TSV_URL);
+            if (!response.ok) throw new Error('Ошибка загрузки данных');
+            const tsvText = await response.text();
+            
+            // Парсим TSV
+            const rows = tsvText.split(/\r?\n/).filter(row => row.trim().length > 0);
+            if (rows.length < 2) {
+                contentDiv.innerHTML = '<div class="novelties-empty">📭 Нет актуальных нововведений</div>';
+                timeSpan.innerHTML = '';
+                return;
+            }
+            
+            const headers = rows[0].split('\t');
+            // Ожидаем колонки: Дата | Заголовок | Описание | Статус
+            const dataRows = rows.slice(1);
+            
+            if (dataRows.length === 0) {
+                contentDiv.innerHTML = '<div class="novelties-empty">📭 Нет актуальных нововведений</div>';
+                timeSpan.innerHTML = '';
+                return;
+            }
+            
+            // Строим таблицу
+            let tableHtml = `<table class="novelties-table">
+                                <thead>
+                                    <tr><th>Дата</th><th>Нововведение</th><th>Статус</th></tr>
+                                </thead>
+                                <tbody>`;
+            for (let row of dataRows) {
+                const cols = row.split('\t');
+                if (cols.length < 3) continue;
+                const date = cols[0] || '';
+                const title = cols[1] || '';
+                const description = cols[2] || '';
+                let status = (cols[3] || 'Актуально').trim();
+                let statusClass = 'status-актуально';
+                if (status.toLowerCase() === 'новое') statusClass = 'status-новое';
+                
+                tableHtml += `<tr>
+                                <td>${escapeHtml(date)}</td>
+                                <td><strong>${escapeHtml(title)}</strong><br><small>${escapeHtml(description)}</small></td>
+                                <td><span class="novelty-status ${statusClass}">${escapeHtml(status)}</span></td>
+                              </tr>`;
+            }
+            tableHtml += `</tbody></table>`;
+            contentDiv.innerHTML = tableHtml;
+            
+            // Время обновления
+            const now = new Date();
+            timeSpan.innerHTML = `🔄 Обновлено: ${now.toLocaleString()}`;
+            
+        } catch (error) {
+            console.error('Ошибка загрузки нововведений:', error);
+            contentDiv.innerHTML = '<div class="novelties-error">❌ Не удалось загрузить нововведения. Проверьте подключение или обратитесь к администратору.</div>';
+            timeSpan.innerHTML = '';
+        }
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // ---------- ОСТАЛЬНЫЕ ФУНКЦИИ (поиск, скрытие шапки, нижнее меню) ----------
     function removeHighlights(container) {
         const marks = container.querySelectorAll('.highlight');
         marks.forEach(mark => {
@@ -457,7 +623,6 @@
         }
     }
 
-    // Прокрутка к разделу при клике на нижнее меню
     function scrollToSection(sectionId) {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -465,10 +630,9 @@
         }
     }
 
-    // Скрытие шапки при скролле
+    // Скрытие шапки
     let lastScrollY = window.scrollY;
     const header = document.getElementById('stickyHeader');
-
     window.addEventListener('scroll', () => {
         const currentScrollY = window.scrollY;
         if (currentScrollY > lastScrollY && currentScrollY > 80) {
@@ -479,17 +643,20 @@
         lastScrollY = currentScrollY;
     });
 
-    // Инициализация
+    // Инициализация при загрузке
     document.addEventListener('DOMContentLoaded', () => {
-        renderContent();
+        renderContent();          // отрисовывает всё содержимое, включая блок нововведений (пустой пока)
+        loadNovelties();          // затем загружает данные из Google
+        if (updateInterval) clearInterval(updateInterval);
+        updateInterval = setInterval(loadNovelties, 5 * 60 * 1000); // каждые 5 минут
+        
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
         searchBtn.addEventListener('click', performSearch);
         searchInput.addEventListener('keyup', (e) => {
             if (e.key === 'Enter') performSearch();
         });
-
-        // Назначить обработчики для нижнего меню
+        
         document.querySelectorAll('.nav-item').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const targetId = btn.getAttribute('data-target');
